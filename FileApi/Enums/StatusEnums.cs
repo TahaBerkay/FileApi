@@ -1,4 +1,4 @@
-﻿namespace DocumentApi.Enums
+﻿namespace FileApi.Enums
 {
     public class StatusEnums
     {

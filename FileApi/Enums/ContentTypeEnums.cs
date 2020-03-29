@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace DocumentApi.Enums
+namespace FileApi.Enums
 {
     public enum ContentTypeEnums
     {
@@ -503,10 +503,10 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/msword", IsBinary = true)]
         DOC,
 
-        [Metadata(Value = "application/vnd.ms-word.document.macroenabled.12", IsBinary = true)]
+        [Metadata(Value = "application/vnd.ms-word.File.macroenabled.12", IsBinary = true)]
         DOCM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.wordprocessingml.document", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.wordprocessingml.File", IsBinary = true)]
         DOCX,
 
         [Metadata(Value = "application/msword", IsBinary = true)]
@@ -515,7 +515,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-word.template.macroenabled.12", IsBinary = true)]
         DOTM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.wordprocessingml.template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.wordprocessingml.template", IsBinary = true)]
         DOTX,
 
         [Metadata(Value = "application/vnd.osgi.dp", IsBinary = true)]
@@ -1571,34 +1571,34 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/oda", IsBinary = true)]
         ODA,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.database", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.database", IsBinary = true)]
         ODB,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.chart", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.chart", IsBinary = true)]
         ODC,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.formula", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.formula", IsBinary = true)]
         ODF,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.formula-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.formula-template", IsBinary = true)]
         ODFT,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.graphics", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.graphics", IsBinary = true)]
         ODG,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.image", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.image", IsBinary = true)]
         ODI,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.text-master", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.text-master", IsBinary = true)]
         ODM,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.presentation", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.presentation", IsBinary = true)]
         ODP,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.spreadsheet", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.spreadsheet", IsBinary = true)]
         ODS,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.text", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.text", IsBinary = true)]
         ODT,
 
         [Metadata(Value = "audio/ogg", IsBinary = true)]
@@ -1646,28 +1646,28 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.yamaha.openscoreformat.osfpvg+xml", IsText = true)]
         OSFPVG,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.chart-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.chart-template", IsBinary = true)]
         OTC,
 
         [Metadata(Value = "application/x-font-otf", IsBinary = true)]
         OTF,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.graphics-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.graphics-template", IsBinary = true)]
         OTG,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.text-web", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.text-web", IsBinary = true)]
         OTH,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.image-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.image-template", IsBinary = true)]
         OTI,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.presentation-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.presentation-template", IsBinary = true)]
         OTP,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.spreadsheet-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.spreadsheet-template", IsBinary = true)]
         OTS,
 
-        [Metadata(Value = "application/vnd.oasis.opendocument.text-template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.oasis.openFile.text-template", IsBinary = true)]
         OTT,
 
         [Metadata(Value = "application/oxps", IsBinary = true)]
@@ -1817,7 +1817,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-powerpoint.template.macroenabled.12", IsBinary = true)]
         POTM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.presentationml.template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.presentationml.template", IsBinary = true)]
         POTX,
 
         [Metadata(Value = "application/vnd.ms-powerpoint.addin.macroenabled.12", IsBinary = true)]
@@ -1835,7 +1835,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-powerpoint.slideshow.macroenabled.12", IsBinary = true)]
         PPSM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.presentationml.slideshow", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.presentationml.slideshow", IsBinary = true)]
         PPSX,
 
         [Metadata(Value = "application/vnd.ms-powerpoint", IsBinary = true)]
@@ -1844,7 +1844,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-powerpoint.presentation.macroenabled.12", IsBinary = true)]
         PPTM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.presentationml.presentation", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.presentationml.presentation", IsBinary = true)]
         PPTX,
 
         [Metadata(Value = "application/vnd.palm", IsBinary = true)]
@@ -2171,7 +2171,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-powerpoint.slide.macroenabled.12", IsBinary = true)]
         SLDM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.presentationml.slide", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.presentationml.slide", IsBinary = true)]
         SLDX,
 
         [Metadata(Value = "application/vnd.epson.salt", IsBinary = true)]
@@ -2846,7 +2846,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-excel.sheet.macroenabled.12", IsBinary = true)]
         XLSM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.spreadsheetml.sheet", IsBinary = true)]
         XLSX,
 
         [Metadata(Value = "application/vnd.ms-excel", IsBinary = true)]
@@ -2855,7 +2855,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.ms-excel.template.macroenabled.12", IsBinary = true)]
         XLTM,
 
-        [Metadata(Value = "application/vnd.openxmlformats-officedocument.spreadsheetml.template", IsBinary = true)]
+        [Metadata(Value = "application/vnd.openxmlformats-officeFile.spreadsheetml.template", IsBinary = true)]
         XLTX,
 
         [Metadata(Value = "application/vnd.ms-excel", IsBinary = true)]
@@ -2885,7 +2885,7 @@ namespace DocumentApi.Enums
         [Metadata(Value = "application/vnd.is-xpr", IsBinary = true)]
         XPR,
 
-        [Metadata(Value = "application/vnd.ms-xpsdocument", IsBinary = true)]
+        [Metadata(Value = "application/vnd.ms-xpsFile", IsBinary = true)]
         XPS,
 
         [Metadata(Value = "application/vnd.intercon.formnet", IsBinary = true)]

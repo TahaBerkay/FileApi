@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using DocumentApi.Enums;
+using FileApi.Enums;
 
-namespace DocumentApi.Utils
+namespace FileApi.Utils
 {
     public class ErrorCode
     {
         public static readonly Dictionary<ErrorEnums.Error, string> ErrorCodes
             = new Dictionary<ErrorEnums.Error, string>
             {
-                {ErrorEnums.Error.DocumentNotFound, "Document is not found"},
+                {ErrorEnums.Error.FileNotFound, "File is not found"},
                 {ErrorEnums.Error.ExceptionOccurred, "An exception is occured"}
             };
     }

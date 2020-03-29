@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DocumentApi.Enums;
+using FileApi.Enums;
 
-namespace DocumentApi.Models
+namespace FileApi.Models
 {
-    public class Document
+    public class File
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

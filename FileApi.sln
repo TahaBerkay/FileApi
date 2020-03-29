@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentApi", "DocumentApi\DocumentApi.csproj", "{36936999-70DA-462A-8DCC-3EBACE338CC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileApi", "FileApi\FileApi.csproj", "{36936999-70DA-462A-8DCC-3EBACE338CC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

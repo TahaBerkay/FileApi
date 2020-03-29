@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using DocumentApi.Services;
+using FileApi.Services;
 
-namespace DocumentApi
+namespace FileApi
 {
     public class Startup
     {
@@ -30,11 +30,11 @@ namespace DocumentApi
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}); });
 
-            services.AddDbContext<DocumentContext>(options =>
+            services.AddDbContext<FileContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IFileService, FileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +43,7 @@ namespace DocumentApi
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             using var servisScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = servisScope.ServiceProvider.GetRequiredService<DocumentContext>();
+            var context = servisScope.ServiceProvider.GetRequiredService<FileContext>();
             context.Database.EnsureCreated();
 
             app.UseHttpsRedirection();

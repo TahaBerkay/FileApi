@@ -1,6 +1,6 @@
-﻿using DocumentApi.Enums;
+﻿using FileApi.Enums;
 
-namespace DocumentApi.Models
+namespace FileApi.Models
 {
     public class ApiErrorResponse
     {
