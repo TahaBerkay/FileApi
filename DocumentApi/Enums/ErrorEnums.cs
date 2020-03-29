@@ -1,10 +1,10 @@
-﻿namespace AttachmentApi.Enums
+﻿namespace DocumentApi.Enums
 {
     public class ErrorEnums
     {
         public enum Error
         {
-            AttachmentNotFound,
+            DocumentNotFound,
             ExceptionOccurred
         }
     }

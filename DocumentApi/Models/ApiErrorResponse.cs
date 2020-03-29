@@ -1,6 +1,6 @@
-﻿using AttachmentApi.Enums;
+﻿using DocumentApi.Enums;
 
-namespace AttachmentApi.Models
+namespace DocumentApi.Models
 {
     public class ApiErrorResponse
     {

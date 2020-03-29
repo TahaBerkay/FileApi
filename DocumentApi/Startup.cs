@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using AttachmentApi.Services;
+using DocumentApi.Services;
 
-namespace AttachmentApi
+namespace DocumentApi
 {
     public class Startup
     {
@@ -30,11 +30,11 @@ namespace AttachmentApi
 
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}); });
 
-            services.AddDbContext<AttachmentContext>(options =>
+            services.AddDbContext<DocumentContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddTransient<IAttachmentService, AttachmentService>();
+            services.AddTransient<IDocumentService, DocumentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +43,7 @@ namespace AttachmentApi
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             using var servisScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = servisScope.ServiceProvider.GetRequiredService<AttachmentContext>();
+            var context = servisScope.ServiceProvider.GetRequiredService<DocumentContext>();
             context.Database.EnsureCreated();
 
             app.UseHttpsRedirection();

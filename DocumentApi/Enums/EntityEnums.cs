@@ -1,4 +1,4 @@
-﻿namespace AttachmentApi.Enums
+﻿namespace DocumentApi.Enums
 {
     public class EntityEnums
     {
