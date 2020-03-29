@@ -10,14 +10,13 @@ namespace DocumentApi.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public string Id { get; set; }
-
-        public string NotifierId { get; set; }
-        public string NotifiedBy { get; set; }
+        public string FileName { get; set; }
+        public string FileUrl { get; set; }
+        public string FileSize { get; set; }
+        public ContentTypeEnums ContentType { get; set; }
         public StatusEnums.Status Status { get; set; }
-        public EntityEnums.EntityType EntityType { get; set; }
-        public EntityEnums.EntityAction EntityAction { get; set; }
-        public string Description { get; set; }
-        [Column(TypeName = "text")] public string Content { get; set; }
         [DataType(DataType.Date)] public DateTime CreatedTs { get; set; }
+        [DataType(DataType.Date)] public DateTime UpdatedTs { get; set; }
+        [DataType(DataType.Date)] public DateTime DeletedTs { get; set; }
     }
 }

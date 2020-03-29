@@ -4,10 +4,9 @@
     {
         public enum Status
         {
-            Ok,
-            Sent,
-            Read,
-            Seen,
+            Created,
+            Updated,
+            Deleted,
             Approved
         }
     }
