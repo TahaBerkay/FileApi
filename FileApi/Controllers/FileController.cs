@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using FileApi.Enums;
 using FileApi.Models;
 using FileApi.Services;
 using FileApi.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FileApi.Controllers
 {
@@ -13,8 +14,8 @@ namespace FileApi.Controllers
     [Route("api/[Controller]/[Action]")]
     public class FileController : ControllerBase
     {
-        private readonly ILogger<FileController> _logger;
         private readonly IFileService _fileService;
+        private readonly ILogger<FileController> _logger;
 
         public FileController(ILogger<FileController> logger, IFileService fileService)
         {
@@ -23,11 +24,11 @@ namespace FileApi.Controllers
         }
 
         [HttpPost]
-        public ApiResponse<File> AddFile(File file)
+        public ApiResponse<File> UploadFile2Db([FromForm(Name = "file")] IFormFile formFile)
         {
             try
             {
-                _fileService.AddFile(file);
+                var file = _fileService.UploadFile2Db(formFile);
                 return new ApiResponse<File>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file, Error = null};
             }
@@ -42,20 +43,19 @@ namespace FileApi.Controllers
             }
         }
 
-        [HttpGet]
-        public ApiResponse<List<File>> GetAll()
+        [HttpPost]
+        public ApiResponse<List<File>> UploadMultipleFiles2Db([FromForm(Name = "files[]")] List<IFormFile> formFiles)
         {
             try
             {
+                var files = _fileService.UploadMultipleFiles2Db(formFiles);
                 return new ApiResponse<List<File>>
-                {
-                    Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = _fileService.GetAll(),
-                    Error = null
-                };
+                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = files, Error = null};
             }
             catch (Exception e)
             {
-                _logger.LogError("GetAll: Exception occurred - message({0}), stackTrace({1})", e.Message, e.StackTrace);
+                _logger.LogError("AddFile: Exception occurred - message({0}), stackTrace({1})", e.Message,
+                    e.StackTrace);
                 var error = new ApiErrorResponse
                     {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
                 return new ApiResponse<List<File>>
@@ -64,11 +64,18 @@ namespace FileApi.Controllers
         }
 
         [HttpGet]
-        public ApiResponse<File> GetById(long id)
+        public IActionResult GetFileFromDb(string fileId)
+        {
+            var item = _fileService.GetFileFromDb(fileId);
+            return File(item.FileContent.ContentBytes, item.ContentType, item.FileName);
+        }
+
+        [HttpGet]
+        public ApiResponse<File> GetFileInfoFromDb(string fileId)
         {
             try
             {
-                var item = _fileService.GetById(id);
+                var item = _fileService.GetFileInfoFromDb(fileId);
                 if (item == null)
                 {
                     var error = new ApiErrorResponse
@@ -94,163 +101,22 @@ namespace FileApi.Controllers
             }
         }
 
-        [HttpGet]
-        public ApiResponse<List<File>> GetByNotifierId(string notifierId)
+        [HttpDelete]
+        public ApiResponse<File> DeleteFileFromDb(string fileId)
         {
             try
             {
-                var item = _fileService.GetByNotifierId(notifierId);
-                if (item == null)
-                {
-                    var error = new ApiErrorResponse
-                    {
-                        Code = ErrorEnums.Error.FileNotFound,
-                        Message = ErrorCode.ErrorCodes[ErrorEnums.Error.FileNotFound]
-                    };
-                    return new ApiResponse<List<File>>
-                        {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-                }
-
-                return new ApiResponse<List<File>>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
+                _fileService.DeleteFileFromDb(fileId);
+                return new ApiResponse<File>
+                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = null, Error = null};
             }
             catch (Exception e)
             {
-                _logger.LogError("GetByNotifierId: Exception occurred - message({0}), stackTrace({1})", e.Message,
+                _logger.LogError("GetById: Exception occurred - message({0}), stackTrace({1})", e.Message,
                     e.StackTrace);
                 var error = new ApiErrorResponse
                     {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
-                return new ApiResponse<List<File>>
-                    {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-            }
-        }
-
-        [HttpGet]
-        public ApiResponse<List<File>> GetByNotifiedBy(string notifiedBy)
-        {
-            try
-            {
-                var item = _fileService.GetByNotifiedBy(notifiedBy);
-                if (item == null)
-                {
-                    var error = new ApiErrorResponse
-                    {
-                        Code = ErrorEnums.Error.FileNotFound,
-                        Message = ErrorCode.ErrorCodes[ErrorEnums.Error.FileNotFound]
-                    };
-                    return new ApiResponse<List<File>>
-                        {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-                }
-
-                return new ApiResponse<List<File>>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("GetByNotifiedBy: Exception occurred - message({0}), stackTrace({1})", e.Message,
-                    e.StackTrace);
-                var error = new ApiErrorResponse
-                    {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
-                return new ApiResponse<List<File>>
-                    {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-            }
-        }
-
-        [HttpGet]
-        public ApiResponse<List<File>> GetNotifierFilesAfterDate(string notifierId, DateTime afterDate)
-        {
-            try
-            {
-                var item = _fileService.GetNotifierFilesAfterDate(notifierId, afterDate);
-                if (item == null)
-                {
-                    var error = new ApiErrorResponse
-                    {
-                        Code = ErrorEnums.Error.FileNotFound,
-                        Message = ErrorCode.ErrorCodes[ErrorEnums.Error.FileNotFound]
-                    };
-                    return new ApiResponse<List<File>>
-                        {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-                }
-
-                return new ApiResponse<List<File>>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(
-                    "GetNotifierFilesAfterDate: Exception occurred - message({0}), stackTrace({1})", e.Message,
-                    e.StackTrace);
-                var error = new ApiErrorResponse
-                    {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
-                return new ApiResponse<List<File>>
-                    {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-            }
-        }
-
-        [HttpGet]
-        public ApiResponse<List<File>> GetNotifiedFilesAfterDate(string notifiedBy, DateTime afterDate)
-        {
-            try
-            {
-                var item = _fileService.GetNotifiedFilesAfterDate(notifiedBy, afterDate);
-                if (item == null)
-                {
-                    var error = new ApiErrorResponse
-                    {
-                        Code = ErrorEnums.Error.FileNotFound,
-                        Message = ErrorCode.ErrorCodes[ErrorEnums.Error.FileNotFound]
-                    };
-                    return new ApiResponse<List<File>>
-                        {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-                }
-
-                return new ApiResponse<List<File>>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(
-                    "GetNotifiedFilesAfterDate: Exception occurred - message({0}), stackTrace({1})", e.Message,
-                    e.StackTrace);
-                var error = new ApiErrorResponse
-                    {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
-                return new ApiResponse<List<File>>
-                    {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-            }
-        }
-
-        [HttpGet]
-        public ApiResponse<List<File>> GetFilesDetailed(string notifierId, string notifiedBy,
-            DateTime afterDate, DateTime beforeDate,
-            EntityEnums.EntityType entityType, EntityEnums.EntityAction entityAction,
-            StatusEnums.Status status)
-        {
-            try
-            {
-                var item = _fileService.GetFilesDetailed(notifierId, notifiedBy, afterDate, beforeDate,
-                    entityType, entityAction, status);
-                if (item == null)
-                {
-                    var error = new ApiErrorResponse
-                    {
-                        Code = ErrorEnums.Error.FileNotFound,
-                        Message = ErrorCode.ErrorCodes[ErrorEnums.Error.FileNotFound]
-                    };
-                    return new ApiResponse<List<File>>
-                        {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
-                }
-
-                return new ApiResponse<List<File>>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("GetFilesDetailed: Exception occurred - message({0}), stackTrace({1})",
-                    e.Message, e.StackTrace);
-                var error = new ApiErrorResponse
-                    {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
-                return new ApiResponse<List<File>>
+                return new ApiResponse<File>
                     {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
             }
         }

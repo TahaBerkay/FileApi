@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FileApi.Enums;
 using FileApi.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using File = FileApi.Models.File;
 
 namespace FileApi.Services
 {
     public interface IFileService
     {
-        void AddFile(File file);
-        List<File> GetAll();
-        File GetById(long id);
-        List<File> GetByNotifierId(string notifierId);
-        List<File> GetByNotifiedBy(string notifiedBy);
-        List<File> GetNotifierFilesAfterDate(string notifierId, DateTime afterDate);
-        List<File> GetNotifiedFilesAfterDate(string notifiedBy, DateTime afterDate);
-
-        List<File> GetFilesDetailed(string notifierId, string notifiedBy,
-            DateTime afterDate, DateTime beforeDate,
-            EntityEnums.EntityType entityType, EntityEnums.EntityAction entityAction,
-            StatusEnums.Status status);
+        File UploadFile2Db(IFormFile formFile);
+        List<File> UploadMultipleFiles2Db(List<IFormFile> formFiles);
+        File GetFileFromDb(string fileId);
+        File GetFileInfoFromDb(string fileId);
+        void DeleteFileFromDb(string fileId);
     }
 
     public class FileService : IFileService
@@ -31,56 +28,72 @@ namespace FileApi.Services
             _context = context;
         }
 
-        public void AddFile(File file)
+        public File UploadFile2Db(IFormFile formFile)
         {
-            _context.Files.Add(file);
+            var file = AddFormFile2Db(formFile);
+            _context.SaveChanges();
+            file.FileContent = null;
+            return file;
+        }
+
+        public List<File> UploadMultipleFiles2Db(List<IFormFile> formFiles)
+        {
+            var files = new List<File>();
+            foreach (var formFile in formFiles)
+            {
+                var file = AddFormFile2Db(formFile);
+                files.Add(file);
+            }
+
+            _context.SaveChanges();
+            files.ForEach(file => file.FileContent = null);
+            return files;
+        }
+
+        public File GetFileFromDb(string fileId)
+        {
+            return _context.Files
+                .Include(file => file.FileContent)
+                .Single(e => e.Id == fileId);
+        }
+
+        public File GetFileInfoFromDb(string fileId)
+        {
+            return _context.Files.Find(fileId);
+        }
+
+        public void DeleteFileFromDb(string fileId)
+        {
+            var deleteFile = _context.Files
+                .Include(file => file.FileContent)
+                .Single(e => e.Id == fileId);
+            _context.Files.Remove(deleteFile);
             _context.SaveChanges();
         }
 
-        public List<File> GetAll()
+        private File AddFormFile2Db(IFormFile formFile)
         {
-            return _context.Files.ToList();
-        }
+            var file = new File
+            {
+                ContentType = formFile.ContentType,
+                ContentDisposition = formFile.ContentDisposition,
+                FileSize = formFile.Length,
+                FileName = formFile.FileName,
+                IsStoredInFileSystem = false,
+                Status = StatusEnums.Status.Created,
+                CreatedTs = DateTime.Now,
+                UpdatedTs = DateTime.Now
+            };
+            if (formFile.Length > 0)
+            {
+                using var ms = new MemoryStream();
+                formFile.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                file.FileContent = new FileBytes {ContentBytes = fileBytes};
+            }
 
-        public File GetById(long id)
-        {
-            return _context.Files.Find(id);
-        }
-
-        public List<File> GetByNotifierId(string notifierId)
-        {
-            return _context.Files.Where(n => n.NotifierId == notifierId).ToList();
-        }
-
-        public List<File> GetByNotifiedBy(string notifiedBy)
-        {
-            return _context.Files.Where(n => n.NotifiedBy == notifiedBy).ToList();
-        }
-
-        public List<File> GetNotifierFilesAfterDate(string notifierId, DateTime afterDate)
-        {
-            return _context.Files.Where(n => n.NotifierId == notifierId && n.CreatedTs > afterDate).ToList();
-        }
-
-        public List<File> GetNotifiedFilesAfterDate(string notifiedBy, DateTime afterDate)
-        {
-            return _context.Files.Where(n => n.NotifiedBy == notifiedBy && n.CreatedTs > afterDate).ToList();
-        }
-
-        public List<File> GetFilesDetailed(string notifierId, string notifiedBy,
-            DateTime afterDate, DateTime beforeDate,
-            EntityEnums.EntityType entityType, EntityEnums.EntityAction entityAction,
-            StatusEnums.Status status)
-        {
-            return _context.Files
-                .Where(n => n.NotifiedBy == notifiedBy)
-                .Where(n => n.NotifierId == notifierId)
-                .Where(n => n.EntityType == entityType)
-                .Where(n => n.EntityAction == entityAction)
-                .Where(n => n.CreatedTs > afterDate)
-                .Where(n => n.CreatedTs < beforeDate)
-                .Where(n => n.Status == status)
-                .ToList();
+            _context.Files.Add(file);
+            return file;
         }
     }
 }

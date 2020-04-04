@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FileApi.Models;
+﻿using FileApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FileApi
 {
@@ -10,5 +10,15 @@ namespace FileApi
         }
 
         public DbSet<File> Files { get; set; }
+        public DbSet<FileBytes> FileBytes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<File>()
+                .HasOne(a => a.FileContent)
+                .WithOne(b => b.File)
+                .HasForeignKey<FileBytes>(b => b.FileId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

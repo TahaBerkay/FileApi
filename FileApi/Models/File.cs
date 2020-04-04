@@ -10,13 +10,15 @@ namespace FileApi.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public string Id { get; set; }
+
         public string FileName { get; set; }
-        public string FileUrl { get; set; }
-        public string FileSize { get; set; }
-        public ContentTypeEnums ContentType { get; set; }
+        public long FileSize { get; set; }
+        public string ContentType { get; set; }
+        public bool IsStoredInFileSystem { get; set; }
+        public string ContentDisposition { get; set; }
+        public FileBytes FileContent { get; set; }
         public StatusEnums.Status Status { get; set; }
         [DataType(DataType.Date)] public DateTime CreatedTs { get; set; }
         [DataType(DataType.Date)] public DateTime UpdatedTs { get; set; }
-        [DataType(DataType.Date)] public DateTime DeletedTs { get; set; }
     }
 }
