@@ -34,7 +34,8 @@ namespace FileApi
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddTransient<IFileService, FileService>();
+            services.AddTransient<File2DbService, File2DbService>();
+            services.AddTransient<File2FsService, File2FsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

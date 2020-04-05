@@ -12,23 +12,23 @@ namespace FileApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]/[Action]")]
-    public class FileController : ControllerBase
+    public class File2DbController : ControllerBase
     {
-        private readonly IFileService _fileService;
-        private readonly ILogger<FileController> _logger;
+        private readonly File2DbService _fileService;
+        private readonly ILogger<File2DbController> _logger;
 
-        public FileController(ILogger<FileController> logger, IFileService fileService)
+        public File2DbController(ILogger<File2DbController> logger, File2DbService fileService)
         {
             _logger = logger;
             _fileService = fileService;
         }
 
         [HttpPost]
-        public ApiResponse<File> UploadFile2Db([FromForm(Name = "file")] IFormFile formFile)
+        public ApiResponse<File> UploadFile([FromForm(Name = "file")] IFormFile formFile)
         {
             try
             {
-                var file = _fileService.UploadFile2Db(formFile);
+                var file = _fileService.UploadFile(formFile);
                 return new ApiResponse<File>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file, Error = null};
             }
@@ -44,11 +44,11 @@ namespace FileApi.Controllers
         }
 
         [HttpPost]
-        public ApiResponse<List<File>> UploadMultipleFiles2Db([FromForm(Name = "files[]")] List<IFormFile> formFiles)
+        public ApiResponse<List<File>> UploadMultipleFiles([FromForm(Name = "files[]")] List<IFormFile> formFiles)
         {
             try
             {
-                var files = _fileService.UploadMultipleFiles2Db(formFiles);
+                var files = _fileService.UploadMultipleFiles(formFiles);
                 return new ApiResponse<List<File>>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = files, Error = null};
             }
@@ -64,12 +64,12 @@ namespace FileApi.Controllers
         }
 
         [HttpPost]
-        public ApiResponse<File> UpdateFile2Db([FromForm(Name = "file")] IFormFile formFile,
+        public ApiResponse<File> UpdateFile([FromForm(Name = "file")] IFormFile formFile,
             [FromForm(Name = "fileId")] string fileId)
         {
             try
             {
-                var file = _fileService.UpdateFile2Db(formFile, fileId);
+                var file = _fileService.UpdateFile(formFile, fileId);
                 return new ApiResponse<File>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file, Error = null};
             }
@@ -85,18 +85,18 @@ namespace FileApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetFileFromDb(string fileId)
+        public IActionResult GetFile(string fileId)
         {
-            var item = _fileService.GetFileFromDb(fileId);
+            var item = _fileService.GetFile(fileId);
             return File(item.FileContent.ContentBytes, item.ContentType, item.FileName);
         }
 
         [HttpGet]
-        public ApiResponse<File> GetFileInfoFromDb(string fileId)
+        public ApiResponse<File> GetFileInfo(string fileId)
         {
             try
             {
-                var item = _fileService.GetFileInfoFromDb(fileId);
+                var item = _fileService.GetFileInfo(fileId);
                 if (item == null)
                 {
                     var error = new ApiErrorResponse
@@ -123,11 +123,11 @@ namespace FileApi.Controllers
         }
 
         [HttpDelete]
-        public ApiResponse<File> DeleteFileFromDb(string fileId)
+        public ApiResponse<File> DeleteFile(string fileId)
         {
             try
             {
-                _fileService.DeleteFileFromDb(fileId);
+                _fileService.DeleteFile(fileId);
                 return new ApiResponse<File>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = null, Error = null};
             }

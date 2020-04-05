@@ -1,48 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FileApi.Enums;
 using FileApi.Models;
+using FileApi.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using File = FileApi.Models.File;
 
 namespace FileApi.Services
 {
-    public interface IFileService
-    {
-        File UploadFile2Db(IFormFile formFile);
-        List<File> UploadMultipleFiles2Db(List<IFormFile> formFiles);
-        File UpdateFile2Db(IFormFile formFile, string fileId);
-        File GetFileFromDb(string fileId);
-        File GetFileInfoFromDb(string fileId);
-        void DeleteFileFromDb(string fileId);
-    }
-
-    public class FileService : IFileService
+    public class File2DbService : IFileService
     {
         private readonly FileContext _context;
 
-        public FileService(FileContext context)
+        public File2DbService(FileContext context)
         {
             _context = context;
         }
 
-        public File UploadFile2Db(IFormFile formFile)
+        public File UploadFile(IFormFile formFile)
         {
-            var file = AddFormFile2Db(formFile);
+            var file = AddFormFile(formFile);
             _context.SaveChanges();
             file.FileContent = null;
             return file;
         }
 
-        public List<File> UploadMultipleFiles2Db(List<IFormFile> formFiles)
+        public List<File> UploadMultipleFiles(List<IFormFile> formFiles)
         {
             var files = new List<File>();
             foreach (var formFile in formFiles)
             {
-                var file = AddFormFile2Db(formFile);
+                var file = AddFormFile(formFile);
                 files.Add(file);
             }
 
@@ -51,7 +40,7 @@ namespace FileApi.Services
             return files;
         }
 
-        public File UpdateFile2Db(IFormFile formFile, string fileId)
+        public File UpdateFile(IFormFile formFile, string fileId)
         {
             var currentFile = _context.Files
                 .Include(file => file.FileContent)
@@ -65,7 +54,7 @@ namespace FileApi.Services
                 currentFile.IsStoredInFileSystem = false;
                 currentFile.Status = StatusEnums.Status.Updated;
                 currentFile.UpdatedTs = DateTime.Now;
-                CopyFileContentFromFormFile(formFile, currentFile);
+                FileUtility.CopyFileContentFromFormFile(formFile, currentFile);
                 _context.SaveChanges();
             }
             else
@@ -77,19 +66,19 @@ namespace FileApi.Services
             return currentFile;
         }
 
-        public File GetFileFromDb(string fileId)
+        public File GetFile(string fileId)
         {
             return _context.Files
                 .Include(file => file.FileContent)
                 .Single(e => e.Id == fileId);
         }
 
-        public File GetFileInfoFromDb(string fileId)
+        public File GetFileInfo(string fileId)
         {
             return _context.Files.Find(fileId);
         }
 
-        public void DeleteFileFromDb(string fileId)
+        public void DeleteFile(string fileId)
         {
             var deleteFile = _context.Files
                 .Include(file => file.FileContent)
@@ -98,41 +87,12 @@ namespace FileApi.Services
             _context.SaveChanges();
         }
 
-        private File AddFormFile2Db(IFormFile formFile)
+        private File AddFormFile(IFormFile formFile)
         {
-            var file = FormFile2File(formFile);
+            var file = FileUtility.FormFile2File(formFile, false);
 
             _context.Files.Add(file);
             return file;
-        }
-
-        private static File FormFile2File(IFormFile formFile)
-        {
-            var file = new File
-            {
-                ContentType = formFile.ContentType,
-                ContentDisposition = formFile.ContentDisposition,
-                FileSize = formFile.Length,
-                FileName = formFile.FileName,
-                IsStoredInFileSystem = false,
-                Status = StatusEnums.Status.Created,
-                CreatedTs = DateTime.Now,
-                UpdatedTs = DateTime.Now
-            };
-            CopyFileContentFromFormFile(formFile, file);
-
-            return file;
-        }
-
-        private static void CopyFileContentFromFormFile(IFormFile formFile, File file)
-        {
-            if (formFile.Length > 0)
-            {
-                using var ms = new MemoryStream();
-                formFile.CopyTo(ms);
-                var fileBytes = ms.ToArray();
-                file.FileContent = new FileBytes {ContentBytes = fileBytes};
-            }
         }
     }
 }
