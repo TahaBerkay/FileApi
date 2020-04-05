@@ -63,6 +63,27 @@ namespace FileApi.Controllers
             }
         }
 
+        [HttpPost]
+        public ApiResponse<File> UpdateFile2Db([FromForm(Name = "file")] IFormFile formFile,
+            [FromForm(Name = "fileId")] string fileId)
+        {
+            try
+            {
+                var file = _fileService.UpdateFile2Db(formFile, fileId);
+                return new ApiResponse<File>
+                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file, Error = null};
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("AddFile: Exception occurred - message({0}), stackTrace({1})", e.Message,
+                    e.StackTrace);
+                var error = new ApiErrorResponse
+                    {Code = ErrorEnums.Error.ExceptionOccurred, Message = e.Message};
+                return new ApiResponse<File>
+                    {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
+            }
+        }
+
         [HttpGet]
         public IActionResult GetFileFromDb(string fileId)
         {

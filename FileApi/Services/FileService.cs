@@ -14,6 +14,7 @@ namespace FileApi.Services
     {
         File UploadFile2Db(IFormFile formFile);
         List<File> UploadMultipleFiles2Db(List<IFormFile> formFiles);
+        File UpdateFile2Db(IFormFile formFile, string fileId);
         File GetFileFromDb(string fileId);
         File GetFileInfoFromDb(string fileId);
         void DeleteFileFromDb(string fileId);
@@ -50,6 +51,32 @@ namespace FileApi.Services
             return files;
         }
 
+        public File UpdateFile2Db(IFormFile formFile, string fileId)
+        {
+            var currentFile = _context.Files
+                .Include(file => file.FileContent)
+                .Single(e => e.Id == fileId);
+            if (currentFile != null)
+            {
+                currentFile.ContentType = formFile.ContentType;
+                currentFile.ContentDisposition = formFile.ContentDisposition;
+                currentFile.FileSize = formFile.Length;
+                currentFile.FileName = formFile.FileName;
+                currentFile.IsStoredInFileSystem = false;
+                currentFile.Status = StatusEnums.Status.Updated;
+                currentFile.UpdatedTs = DateTime.Now;
+                CopyFileContentFromFormFile(formFile, currentFile);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("FileId not found:" + fileId);
+            }
+
+            currentFile.FileContent = null;
+            return currentFile;
+        }
+
         public File GetFileFromDb(string fileId)
         {
             return _context.Files
@@ -73,6 +100,14 @@ namespace FileApi.Services
 
         private File AddFormFile2Db(IFormFile formFile)
         {
+            var file = FormFile2File(formFile);
+
+            _context.Files.Add(file);
+            return file;
+        }
+
+        private static File FormFile2File(IFormFile formFile)
+        {
             var file = new File
             {
                 ContentType = formFile.ContentType,
@@ -84,6 +119,13 @@ namespace FileApi.Services
                 CreatedTs = DateTime.Now,
                 UpdatedTs = DateTime.Now
             };
+            CopyFileContentFromFormFile(formFile, file);
+
+            return file;
+        }
+
+        private static void CopyFileContentFromFormFile(IFormFile formFile, File file)
+        {
             if (formFile.Length > 0)
             {
                 using var ms = new MemoryStream();
@@ -91,9 +133,6 @@ namespace FileApi.Services
                 var fileBytes = ms.ToArray();
                 file.FileContent = new FileBytes {ContentBytes = fileBytes};
             }
-
-            _context.Files.Add(file);
-            return file;
         }
     }
 }
