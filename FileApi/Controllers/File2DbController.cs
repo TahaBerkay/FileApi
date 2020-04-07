@@ -88,7 +88,7 @@ namespace FileApi.Controllers
         public IActionResult GetFile(string fileId)
         {
             var item = _fileService.GetFile(fileId);
-            return File(item.FileContent.ContentBytes, item.ContentType, item.FileName);
+            return File(item.FileContent.ContentBytes, item.ContentType, item.FileName, true);
         }
 
         [HttpGet]

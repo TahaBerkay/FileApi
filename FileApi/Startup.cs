@@ -36,6 +36,7 @@ namespace FileApi
 
             services.AddTransient<File2DbService, File2DbService>();
             services.AddTransient<File2FsService, File2FsService>();
+            services.AddTransient<StreamFile2FsService, StreamFile2FsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

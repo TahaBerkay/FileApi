@@ -11,13 +11,13 @@ using File = FileApi.Models.File;
 
 namespace FileApi.Services
 {
-    public class File2FsService : IFileService
+    public class StreamFile2FsService : IFileService
     {
         private readonly FileContext _context;
 
         private readonly string _rootFileDirectory;
 
-        public File2FsService(FileContext context, IConfiguration configuration)
+        public StreamFile2FsService(FileContext context, IConfiguration configuration)
         {
             _context = context;
 
@@ -33,8 +33,7 @@ namespace FileApi.Services
             //////////////////////////////////
             // TODO: if (formFile.Length > 0)
             // TODO: encoding path and name
-            // TODO: fix id base get methods on url -- encoding
-            // TODO: GenerateAntiforgeryTokenCookieAttribute - ASP.NET Core's built-in antiforgery support 
+            // TODO: fix id base get methods on url
             //////////////////////////////////
 
             var combined = Path.Combine(_rootFileDirectory, formFile.FileName);
