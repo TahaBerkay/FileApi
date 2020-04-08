@@ -9,8 +9,6 @@ namespace FileApi.Utils
 {
     public static class FileUtility
     {
-        private const string FileNameDelimiter = ".";
-
         /*
         public static bool CheckPathIsValid(string fullPath)
         {
@@ -78,7 +76,7 @@ namespace FileApi.Utils
         {
             var extension = Path.GetExtension(formFile.FileName);
             var fileName = Guid.NewGuid().ToString();
-            var fileNameInFs = String.Concat(fileName, FileNameDelimiter, extension);
+            var fileNameInFs = String.Concat(fileName, extension);
             return fileNameInFs;
         }
 

@@ -45,7 +45,7 @@ namespace FileApi.Services
             foreach (var formFile in formFiles)
             {
                 var fileNameInFs = FileUtility.GenerateFileNameForFs(formFile);
-                var filePathInFs = GetFilePathInFs(formFile.FileName);
+                var filePathInFs = GetFilePathInFs(fileNameInFs);
 
                 FileUtility.Save2FsByStreaming(filePathInFs, formFile);
                 var file = AddFormFile(formFile, fileNameInFs);
@@ -65,7 +65,7 @@ namespace FileApi.Services
             if (currentFile != null)
             {
                 var newFileNameInFs = FileUtility.GenerateFileNameForFs(formFile);
-                var newFilePathInFs = GetFilePathInFs(formFile.FileName);
+                var newFilePathInFs = GetFilePathInFs(newFileNameInFs);
                 var oldFilePathInFs = GetFilePathInFs(currentFile.FileNameInFs);
 
                 System.IO.File.Delete(oldFilePathInFs);
