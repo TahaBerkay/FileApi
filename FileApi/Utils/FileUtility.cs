@@ -76,7 +76,7 @@ namespace FileApi.Utils
         {
             var extension = Path.GetExtension(formFile.FileName);
             var fileName = Guid.NewGuid().ToString();
-            var fileNameInFs = String.Concat(fileName, extension);
+            var fileNameInFs = string.Concat(fileName, extension);
             return fileNameInFs;
         }
 
