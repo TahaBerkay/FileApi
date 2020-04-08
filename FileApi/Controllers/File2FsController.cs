@@ -24,6 +24,7 @@ namespace FileApi.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         public ApiResponse<File> UploadFile([FromForm(Name = "file")] IFormFile formFile)
         {
             try
@@ -44,6 +45,7 @@ namespace FileApi.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         public ApiResponse<List<File>> UploadMultipleFiles([FromForm(Name = "files[]")] List<IFormFile> formFiles)
         {
             try
@@ -64,6 +66,7 @@ namespace FileApi.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         public ApiResponse<File> UpdateFile([FromForm(Name = "file")] IFormFile formFile,
             [FromForm(Name = "fileId")] string fileId)
         {
@@ -85,10 +88,21 @@ namespace FileApi.Controllers
         }
 
         [HttpGet]
+        [DisableRequestSizeLimit]
         public IActionResult GetFile(string fileId)
         {
-            var item = _fileService.GetFile(fileId);
-            return PhysicalFile(item.FilePath, item.ContentType, item.FileName, true);
+            var file = _fileService.GetFile(fileId);
+            var fileNameInFs = _fileService.GetFilePathInFs(file.FileNameInFs);
+            return PhysicalFile(fileNameInFs, file.ContentType, file.FileName, true);
+        }
+
+        [HttpGet]
+        [DisableRequestSizeLimit]
+        public ActionResult GetFileByStreaming(string fileId)
+        {
+            var file = _fileService.GetFile(fileId);
+            var fileStream = _fileService.GetFileStream(file);
+            return File(fileStream, file.ContentType, file.FileName, true);
         }
 
         [HttpGet]
@@ -108,6 +122,7 @@ namespace FileApi.Controllers
                         {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
                 }
 
+                item.FileNameInFs = null;
                 return new ApiResponse<File>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
             }

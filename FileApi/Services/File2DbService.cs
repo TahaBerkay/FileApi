@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FileApi.Enums;
 using FileApi.Models;
 using FileApi.Utils;
 using Microsoft.AspNetCore.Http;
@@ -47,13 +46,7 @@ namespace FileApi.Services
                 .Single(e => e.Id == fileId);
             if (currentFile != null)
             {
-                currentFile.ContentType = formFile.ContentType;
-                currentFile.ContentDisposition = formFile.ContentDisposition;
-                currentFile.FileSize = formFile.Length;
-                currentFile.FileName = formFile.FileName;
-                currentFile.IsStoredInFileSystem = false;
-                currentFile.Status = StatusEnums.Status.Updated;
-                currentFile.UpdatedTs = DateTime.Now;
+                FileUtility.UpdatedFileByFormFile(formFile, currentFile, null, false);
                 FileUtility.CopyFileContentFromFormFile(formFile, currentFile);
                 _context.SaveChanges();
             }

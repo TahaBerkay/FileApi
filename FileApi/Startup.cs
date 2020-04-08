@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using FileApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +37,13 @@ namespace FileApi
 
             services.AddTransient<File2DbService, File2DbService>();
             services.AddTransient<File2FsService, File2FsService>();
-            services.AddTransient<StreamFile2FsService, StreamFile2FsService>();
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = long.MaxValue;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,7 +13,7 @@ namespace FileApi.Models
 
         public string FileName { get; set; }
         public long FileSize { get; set; }
-        public string FilePath { get; set; }
+        public string FileNameInFs { get; set; }
         public string ContentType { get; set; }
         public bool IsStoredInFileSystem { get; set; }
         public string ContentDisposition { get; set; }

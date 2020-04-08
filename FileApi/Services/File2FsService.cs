@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FileApi.Enums;
 using FileApi.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -30,23 +29,14 @@ namespace FileApi.Services
 
         public File UploadFile(IFormFile formFile)
         {
-            //////////////////////////////////
-            // TODO: if (formFile.Length > 0)
-            // TODO: encoding path and name
-            // TODO: fix id base get methods on url -- encoding
-            // TODO: GenerateAntiforgeryTokenCookieAttribute - ASP.NET Core's built-in antiforgery support 
-            //////////////////////////////////
+            var fileNameInFs = FileUtility.GenerateFileNameForFs(formFile);
+            var filePathInFs = GetFilePathInFs(fileNameInFs);
 
-            var combined = Path.Combine(_rootFileDirectory, formFile.FileName);
-            if (FileUtility.CheckPathIsValid(combined))
-            {
-                FileUtility.Save2Fs(combined, formFile);
-                var file = AddFormFile(formFile, combined);
-                _context.SaveChanges();
-                return file;
-            }
-
-            throw new Exception("Combined path is invalid:" + combined);
+            FileUtility.Save2FsByStreaming(filePathInFs, formFile);
+            var file = AddFormFile(formFile, fileNameInFs);
+            _context.SaveChanges();
+            file.FileNameInFs = null;
+            return file;
         }
 
         public List<File> UploadMultipleFiles(List<IFormFile> formFiles)
@@ -54,20 +44,16 @@ namespace FileApi.Services
             var files = new List<File>();
             foreach (var formFile in formFiles)
             {
-                var combined = Path.Combine(_rootFileDirectory, formFile.FileName);
-                if (FileUtility.CheckPathIsValid(combined))
-                {
-                    FileUtility.Save2Fs(combined, formFile);
-                    var file = AddFormFile(formFile, combined);
-                    files.Add(file);
-                }
-                else
-                {
-                    throw new Exception("Combined path is invalid:" + combined);
-                }
+                var fileNameInFs = FileUtility.GenerateFileNameForFs(formFile);
+                var filePathInFs = GetFilePathInFs(formFile.FileName);
+
+                FileUtility.Save2FsByStreaming(filePathInFs, formFile);
+                var file = AddFormFile(formFile, fileNameInFs);
+                files.Add(file);
             }
 
             _context.SaveChanges();
+            files.ForEach(file => file.FileNameInFs = null);
             return files;
         }
 
@@ -78,35 +64,24 @@ namespace FileApi.Services
                 .Single(e => e.Id == fileId);
             if (currentFile != null)
             {
-                var combined = Path.Combine(_rootFileDirectory, formFile.FileName);
-                if (FileUtility.CheckPathIsValid(combined))
-                {
-                    System.IO.File.Delete(currentFile.FilePath);
-                    currentFile.ContentType = formFile.ContentType;
-                    currentFile.ContentDisposition = formFile.ContentDisposition;
-                    currentFile.FileSize = formFile.Length;
-                    currentFile.FileName = formFile.FileName;
-                    currentFile.IsStoredInFileSystem = true;
-                    currentFile.FilePath = combined;
-                    currentFile.Status = StatusEnums.Status.Updated;
-                    currentFile.UpdatedTs = DateTime.Now;
+                var newFileNameInFs = FileUtility.GenerateFileNameForFs(formFile);
+                var newFilePathInFs = GetFilePathInFs(formFile.FileName);
+                var oldFilePathInFs = GetFilePathInFs(currentFile.FileNameInFs);
 
-                    FileUtility.Save2Fs(combined, formFile);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    throw new Exception("Combined path is invalid:" + combined);
-                }
+                System.IO.File.Delete(oldFilePathInFs);
+                FileUtility.UpdatedFileByFormFile(formFile, currentFile, newFileNameInFs, true);
+                FileUtility.Save2FsByStreaming(newFilePathInFs, formFile);
+                _context.SaveChanges();
             }
             else
             {
                 throw new Exception("FileId not found:" + fileId);
             }
 
-            currentFile.FileContent = null;
+            currentFile.FileNameInFs = null;
             return currentFile;
         }
+
 
         public File GetFile(string fileId)
         {
@@ -123,15 +98,27 @@ namespace FileApi.Services
             var deleteFile = _context.Files
                 .Include(file => file.FileContent)
                 .Single(e => e.Id == fileId);
-            System.IO.File.Delete(deleteFile.FilePath);
+            var filePathInFs = GetFilePathInFs(deleteFile.FileNameInFs);
+            System.IO.File.Delete(filePathInFs);
             _context.Files.Remove(deleteFile);
             _context.SaveChanges();
         }
 
-        private File AddFormFile(IFormFile formFile, string filePath)
+        public FileStream GetFileStream(File file)
+        {
+            var filePathInFs = GetFilePathInFs(file.FileNameInFs);
+            return new FileStream(filePathInFs, FileMode.Open, FileAccess.Read);
+        }
+
+        public string GetFilePathInFs(string fileNameInFs)
+        {
+            return FileUtility.GetFilePathInFs(_rootFileDirectory, fileNameInFs);
+        }
+
+        private File AddFormFile(IFormFile formFile, string fileNameInFs)
         {
             var file = FileUtility.FormFile2File(formFile, true);
-            file.FilePath = filePath;
+            file.FileNameInFs = fileNameInFs;
             _context.Files.Add(file);
             return file;
         }

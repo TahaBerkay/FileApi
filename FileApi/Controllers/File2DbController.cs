@@ -108,6 +108,7 @@ namespace FileApi.Controllers
                         {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
                 }
 
+                item.FileNameInFs = null;
                 return new ApiResponse<File>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
             }
