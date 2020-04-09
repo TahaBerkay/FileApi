@@ -1,193 +1,193 @@
 {
-	"info": {
-		"_postman_id": "f468feb9-9f7d-4312-a904-2d7db8e3ba7d",
-		"name": "File2FsApi",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "https://localhost:44326/api/File/UploadFile2Db",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "file",
-							"type": "file",
-							"src": "/C:/Users/TahaBerkay/Downloads/UploadThis.zip"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://localhost:44326/api/File2Fs/UploadFile",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44326",
-					"path": [
-						"api",
-						"File2Fs",
-						"UploadFile"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "https://localhost:44326/api/File/GetFileFromDb",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:44326/api/File2Fs/GetFile?fileId=3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44326",
-					"path": [
-						"api",
-						"File2Fs",
-						"GetFile"
-					],
-					"query": [
-						{
-							"key": "fileId",
-							"value": "3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "https://localhost:44326/api/File/GetFileByStreaming",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:44326/api/File2Fs/GetFileByStreaming?fileId=3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44326",
-					"path": [
-						"api",
-						"File2Fs",
-						"GetFileByStreaming"
-					],
-					"query": [
-						{
-							"key": "fileId",
-							"value": "3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "https://localhost:44326/api/File/DeleteFileFromDb",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:44326/api/File2Fs/DeleteFile?fileId=3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44326",
-					"path": [
-						"api",
-						"File2Fs",
-						"DeleteFile"
-					],
-					"query": [
-						{
-							"key": "fileId",
-							"value": "3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "https://localhost:44326/api/File/UploadMultipleFiles2Db",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "files[]",
-							"type": "file",
-							"src": [
-								"/C:/Users/TahaBerkay/Downloads/Audio_Realtek_6.0.1.7027_W81x64_A (1).zip",
-								"/C:/Users/TahaBerkay/Downloads/Audio_Realtek_6.0.1.7027_W81x64_A (3).zip",
-								"/C:/Users/TahaBerkay/Downloads/BCompare-4.3.4.24657.exe"
-							]
-						}
-					]
-				},
-				"url": {
-					"raw": "https://localhost:44326/api/File2Fs/UploadMultipleFiles",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44326",
-					"path": [
-						"api",
-						"File2Fs",
-						"UploadMultipleFiles"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "https://localhost:44326/api/File/UpdateFile2Db",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "file",
-							"type": "file",
-							"src": "/C:/Users/TahaBerkay/Desktop/4kcity.jpg"
-						},
-						{
-							"key": "fileId",
-							"value": "392f184a-d5cf-4eb6-b11f-e8dd933c83ff",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://localhost:44326/api/File2Fs/UpdateFile",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44326",
-					"path": [
-						"api",
-						"File2Fs",
-						"UpdateFile"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"protocolProfileBehavior": {}
+  "info": {
+    "_postman_id": "f468feb9-9f7d-4312-a904-2d7db8e3ba7d",
+    "name": "File2FsApi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "https://localhost:44326/api/File/UploadFile2Db",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/C:/Users/TahaBerkay/Downloads/UploadThis.zip"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://localhost:44326/api/File2Fs/UploadFile",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "44326",
+          "path": [
+            "api",
+            "File2Fs",
+            "UploadFile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://localhost:44326/api/File/GetFileFromDb",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:44326/api/File2Fs/GetFile?fileId=3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "44326",
+          "path": [
+            "api",
+            "File2Fs",
+            "GetFile"
+          ],
+          "query": [
+            {
+              "key": "fileId",
+              "value": "3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://localhost:44326/api/File/GetFileByStreaming",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:44326/api/File2Fs/GetFileByStreaming?fileId=3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "44326",
+          "path": [
+            "api",
+            "File2Fs",
+            "GetFileByStreaming"
+          ],
+          "query": [
+            {
+              "key": "fileId",
+              "value": "3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://localhost:44326/api/File/DeleteFileFromDb",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:44326/api/File2Fs/DeleteFile?fileId=3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "44326",
+          "path": [
+            "api",
+            "File2Fs",
+            "DeleteFile"
+          ],
+          "query": [
+            {
+              "key": "fileId",
+              "value": "3fe4b2b0-da3c-4bd6-8f2b-7dfb5fe809ca"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://localhost:44326/api/File/UploadMultipleFiles2Db",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "files[]",
+              "type": "file",
+              "src": [
+                "/C:/Users/TahaBerkay/Downloads/Audio_Realtek_6.0.1.7027_W81x64_A (1).zip",
+                "/C:/Users/TahaBerkay/Downloads/Audio_Realtek_6.0.1.7027_W81x64_A (3).zip",
+                "/C:/Users/TahaBerkay/Downloads/BCompare-4.3.4.24657.exe"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://localhost:44326/api/File2Fs/UploadMultipleFiles",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "44326",
+          "path": [
+            "api",
+            "File2Fs",
+            "UploadMultipleFiles"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "https://localhost:44326/api/File/UpdateFile2Db",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/C:/Users/TahaBerkay/Desktop/4kcity.jpg"
+            },
+            {
+              "key": "fileId",
+              "value": "392f184a-d5cf-4eb6-b11f-e8dd933c83ff",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://localhost:44326/api/File2Fs/UpdateFile",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "44326",
+          "path": [
+            "api",
+            "File2Fs",
+            "UpdateFile"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
 }

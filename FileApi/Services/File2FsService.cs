@@ -35,7 +35,6 @@ namespace FileApi.Services
             FileUtility.Save2FsByStreaming(filePathInFs, formFile);
             var file = AddFormFile(formFile, fileNameInFs);
             _context.SaveChanges();
-            file.FileNameInFs = null;
             return file;
         }
 
@@ -53,7 +52,6 @@ namespace FileApi.Services
             }
 
             _context.SaveChanges();
-            files.ForEach(file => file.FileNameInFs = null);
             return files;
         }
 
@@ -78,7 +76,6 @@ namespace FileApi.Services
                 throw new Exception("FileId not found:" + fileId);
             }
 
-            currentFile.FileNameInFs = null;
             return currentFile;
         }
 

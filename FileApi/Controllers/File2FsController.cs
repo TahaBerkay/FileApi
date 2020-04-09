@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FileApi.Enums;
+using FileApi.Extensions;
 using FileApi.Models;
 using FileApi.Services;
 using FileApi.Utils;
@@ -31,7 +32,9 @@ namespace FileApi.Controllers
             {
                 var file = _fileService.UploadFile(formFile);
                 return new ApiResponse<File>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file, Error = null};
+                {
+                    Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file.WithoutCriticalData(), Error = null
+                };
             }
             catch (Exception e)
             {
@@ -51,6 +54,7 @@ namespace FileApi.Controllers
             try
             {
                 var files = _fileService.UploadMultipleFiles(formFiles);
+                files.WithoutCriticalData();
                 return new ApiResponse<List<File>>
                     {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = files, Error = null};
             }
@@ -74,7 +78,9 @@ namespace FileApi.Controllers
             {
                 var file = _fileService.UpdateFile(formFile, fileId);
                 return new ApiResponse<File>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file, Error = null};
+                {
+                    Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = file.WithoutCriticalData(), Error = null
+                };
             }
             catch (Exception e)
             {
@@ -122,9 +128,10 @@ namespace FileApi.Controllers
                         {Success = false, Message = SuccessMsgEnums.Msg.NotOk, Result = null, Error = error};
                 }
 
-                item.FileNameInFs = null;
                 return new ApiResponse<File>
-                    {Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item, Error = null};
+                {
+                    Success = true, Message = SuccessMsgEnums.Msg.Ok, Result = item.WithoutCriticalData(), Error = null
+                };
             }
             catch (Exception e)
             {

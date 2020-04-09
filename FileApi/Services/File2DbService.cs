@@ -21,7 +21,6 @@ namespace FileApi.Services
         {
             var file = AddFormFile(formFile);
             _context.SaveChanges();
-            file.FileContent = null;
             return file;
         }
 
@@ -35,7 +34,6 @@ namespace FileApi.Services
             }
 
             _context.SaveChanges();
-            files.ForEach(file => file.FileContent = null);
             return files;
         }
 
@@ -55,7 +53,6 @@ namespace FileApi.Services
                 throw new Exception("FileId not found:" + fileId);
             }
 
-            currentFile.FileContent = null;
             return currentFile;
         }
 
