@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace FileApi.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]/[Action]")]
+    [Route("api/File/[Controller]/[Action]")]
     public class File2FsController : ControllerBase
     {
         private readonly File2FsService _fileService;
@@ -97,18 +97,38 @@ namespace FileApi.Controllers
         [DisableRequestSizeLimit]
         public IActionResult GetFile(string fileId)
         {
-            var file = _fileService.GetFile(fileId);
-            var fileNameInFs = _fileService.GetFilePathInFs(file.FileNameInFs);
-            return PhysicalFile(fileNameInFs, file.ContentType, file.FileName, true);
+            try
+            {
+                var file = _fileService.GetFile(fileId);
+                var fileNameInFs = _fileService.GetFilePathInFs(file.FileNameInFs);
+                return PhysicalFile(fileNameInFs, file.ContentType, file.FileName, true);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("GetFile: Exception occurred - fileId({0}), message({1}), stackTrace({2})", fileId,
+                    e.Message,
+                    e.StackTrace);
+                return NoContent();
+            }
         }
 
         [HttpGet]
         [DisableRequestSizeLimit]
         public ActionResult GetFileByStreaming(string fileId)
         {
-            var file = _fileService.GetFile(fileId);
-            var fileStream = _fileService.GetFileStream(file);
-            return File(fileStream, file.ContentType, file.FileName, true);
+            try
+            {
+                var file = _fileService.GetFile(fileId);
+                var fileStream = _fileService.GetFileStream(file);
+                return File(fileStream, file.ContentType, file.FileName, true);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("GetFileByStreaming: Exception occurred - fileId({0}), message({1}), stackTrace({2})",
+                    fileId, e.Message,
+                    e.StackTrace);
+                return NoContent();
+            }
         }
 
         [HttpGet]

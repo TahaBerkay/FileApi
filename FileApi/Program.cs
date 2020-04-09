@@ -27,7 +27,7 @@ namespace FileApi
                             levelOverrides: new Dictionary<string, LogLevel>
                                 {{"Microsoft", LogLevel.Critical}, {"System", LogLevel.Critical}},
                             fileSizeLimitBytes: 200_000_000);
-                    }).UseStartup<Startup>();
+                    }).UseStartup<Startup>().UseUrls("http://localhost:5002/");
                 });
         }
     }

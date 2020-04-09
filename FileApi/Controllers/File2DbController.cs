@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace FileApi.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]/[Action]")]
+    [Route("api/File/[Controller]/[Action]")]
     public class File2DbController : ControllerBase
     {
         private readonly File2DbService _fileService;
@@ -93,8 +93,18 @@ namespace FileApi.Controllers
         [HttpGet]
         public IActionResult GetFile(string fileId)
         {
-            var item = _fileService.GetFile(fileId);
-            return File(item.FileContent.ContentBytes, item.ContentType, item.FileName, true);
+            try
+            {
+                var item = _fileService.GetFile(fileId);
+                return File(item.FileContent.ContentBytes, item.ContentType, item.FileName, true);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("GetFile: Exception occurred - fileId({0}), message({1}), stackTrace({2})", fileId,
+                    e.Message,
+                    e.StackTrace);
+                return NoContent();
+            }
         }
 
         [HttpGet]
