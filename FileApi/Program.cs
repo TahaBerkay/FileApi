@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace FileApi
 {
@@ -18,16 +18,24 @@ namespace FileApi
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureLogging((hostingContext, builder) =>
-                    {
-                        var outputTemplate =
-                            "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] ({SourceContext}) {Message}{NewLine}{Exception}";
-                        builder.AddFile("logs/FileApi-{HalfHour}.log",
-                            outputTemplate: outputTemplate,
-                            levelOverrides: new Dictionary<string, LogLevel>
-                                {{"Microsoft", LogLevel.Critical}, {"System", LogLevel.Critical}},
-                            fileSizeLimitBytes: 200_000_000);
-                    }).UseStartup<Startup>().UseUrls("http://localhost:5002/");
+                    webBuilder.UseStartup<Startup>()
+                        .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                            .ReadFrom.Configuration(hostingContext.Configuration)
+                            .MinimumLevel.Information()
+                            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                            .MinimumLevel.Override("System", LogEventLevel.Error)
+                            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                            .Enrich.FromLogContext()
+                            //.Enrich.WithHttpRequestId()
+                            //.Enrich.WithHttpRequestTraceId()
+                            //.Enrich.WithCorrelationId()
+                            .WriteTo.RollingFile(
+                                "logs/FileApi-{HalfHour}.log",
+                                LogEventLevel.Information,
+                                "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] ({SourceContext}) {Message}{NewLine}{Exception}",
+                                fileSizeLimitBytes: 200_000_000
+                            ))
+                        .UseUrls("http://localhost:5002/");
                 });
         }
     }

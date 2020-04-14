@@ -3,12 +3,14 @@ using FileApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace FileApi
 {
@@ -23,6 +25,12 @@ namespace FileApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddJsonOptions(opt =>
             {
                 opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -52,6 +60,8 @@ namespace FileApi
             using var servisScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = servisScope.ServiceProvider.GetRequiredService<FileContext>();
             context.Database.EnsureCreated();
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
